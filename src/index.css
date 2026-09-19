@@ -1,0 +1,349 @@
+/* ---------------------------------------------------------------------------
+   PROP-MATCH design system
+   "Ink & Vermillion" — an editorial matchmaking desk for real estate.
+   Base: warm ink. Surface: paper stock. Accent: match-vermillion.
+   Type: Fraunces (display, soft/wonky serif) · Instrument Sans (UI) · DM Mono (ledger data)
+--------------------------------------------------------------------------- */
+@import "tailwindcss";
+
+@theme {
+  /* --- ink (base) --- */
+  --color-ink: #14110e;
+  --color-ink-soft: #1c1813;
+  --color-ink-lift: #241f18;
+  --color-ink-line: #322b21;
+  --color-ink-line-soft: #241f19;
+
+  /* --- paper (surface) --- */
+  --color-paper: #f7f2e8;
+  --color-paper-warm: #efe7d8;
+  --color-paper-dim: #ded3bf;
+  --color-paper-line: #cfc2aa;
+
+  /* --- bone (text on ink) --- */
+  --color-bone: #f3ece0;
+  --color-bone-dim: #b3a692;
+  --color-bone-faint: #7d7263;
+
+  /* --- signal --- */
+  --color-match: #e2502a;
+  --color-match-deep: #b23a19;
+  --color-match-soft: #f7a77f;
+  --color-verify: #7fa07f;
+  --color-gold: #d9a441;
+
+  /* --- type --- */
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* --- shape --- */
+  --radius-card: 22px;
+  --radius-sheet: 28px;
+  --radius-pill: 999px;
+
+  /* --- depth: off-register print shadow, not a soft web blur --- */
+  --shadow-print: 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+  --shadow-paper: 4px 5px 0 0 rgba(20, 17, 14, 0.85);
+  --shadow-deck: 0 30px 60px -34px rgba(0, 0, 0, 0.95);
+
+  /* --- motion --- */
+  --ease-snap: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --ease-weight: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  --animate-rise: rise 0.6s var(--ease-snap) both;
+  --animate-stamp: stamp 0.5s var(--ease-weight) both;
+  --animate-marquee: marquee 26s linear infinite;
+  --animate-pulse-dot: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stamp {
+  0% {
+    opacity: 0;
+    transform: rotate(-14deg) scale(2.1);
+  }
+  62% {
+    opacity: 1;
+    transform: rotate(-7deg) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-7deg) scale(1);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(102%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    background: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-variation-settings: "SOFT" 42, "WONK" 1;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-match);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-match);
+    color: var(--color-paper);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+/* ===========================================================================
+   Atmosphere — film grain, paper stock, hairline rules
+   =========================================================================== */
+@utility grain {
+  position: relative;
+}
+@utility grain-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+@utility paper-stock {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  background-image:
+    radial-gradient(120% 90% at 12% 0%, rgba(255, 255, 255, 0.7), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23p)' opacity='0.28'/%3E%3C/svg%3E");
+}
+@utility deck-felt {
+  background:
+    radial-gradient(90% 60% at 50% -8%, rgba(226, 80, 42, 0.16), transparent 62%),
+    radial-gradient(70% 50% at 88% 108%, rgba(217, 164, 65, 0.1), transparent 60%),
+    var(--color-ink);
+}
+@utility ledger-rule {
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-ink-line) 0 1px,
+    transparent 1px 8px
+  );
+  height: 1px;
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===========================================================================
+   Components
+   =========================================================================== */
+
+/* Rubber stamp — used for PASS / LIKE / MATCHED marks */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 3px transparent, inset 0 0 0 1px currentColor;
+  position: relative;
+}
+.stamp::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23g)'/%3E%3C/svg%3E");
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+.stamp-lg {
+  padding: 0.55rem 1.1rem;
+  font-size: 1.5rem;
+  border-width: 3px;
+  border-radius: 10px;
+  letter-spacing: 0.3em;
+}
+
+/* Property card front: photo + ledger caption panel */
+.listing-card {
+  transform: translateZ(0);
+  will-change: transform;
+}
+.score-ring {
+  background: conic-gradient(
+    var(--ring-color, var(--color-match)) calc(var(--score, 0) * 1%),
+    rgba(243, 236, 224, 0.18) 0
+  );
+}
+
+/* Bottom sheet */
+.sheet-in {
+  animation: sheet-up 0.42s var(--ease-weight) both;
+}
+.grabber {
+  width: 44px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-ink-line);
+}
+
+/* Marquee band */
+.band {
+  display: flex;
+  width: max-content;
+  animation: var(--animate-marquee);
+}
+.band:hover {
+  animation-play-state: paused;
+}
+
+/* Phone shell: mobile-first, framed on desktop */
+.device {
+  width: 100%;
+  max-width: 430px;
+  height: 100dvh;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-ink);
+}
+@media (min-width: 900px) {
+  .device {
+    height: min(880px, 94dvh);
+    border-radius: 42px;
+    border: 1px solid var(--color-ink-line);
+    box-shadow: 0 60px 120px -50px rgba(0, 0, 0, 0.95), 0 0 0 10px #0b0906;
+  }
+}
+.scroll-area {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Tactile press feedback for every tappable surface */
+.tap {
+  transition:
+    transform 0.16s var(--ease-snap),
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+.tap:active {
+  transform: scale(0.965);
+}
+
+/* Hand-drawn skyline motif */
+.skyline path {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: draw 2.2s var(--ease-snap) 0.15s forwards;
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
